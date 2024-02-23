@@ -1,0 +1,33 @@
+{
+  "name": "compraventasystem",
+  "version": "1.0.0",
+  "description": "Software Este proyecto se centra en el desarrollo de una API web implementada en NodeJS, destinada a gestionar el registro de ventas, productos en línea y otras operaciones comerciales de una empresa. La aplicación se estructura en dos secciones principales, administrador y cliente, cada uno con funcionalidades específicas.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "author": "Joshua Elí Isaac Realiquez Sosa",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.4",
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.1.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.0.3"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrealiquez-2019342/compraVentaSystem.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jrealiquez-2019342/compraVentaSystem/issues"
+  },
+  "homepage": "https://github.com/jrealiquez-2019342/compraVentaSystem#readme"
+}

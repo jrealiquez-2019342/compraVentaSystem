@@ -1,0 +1,224 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "compraventa",
+    "dateExported": "2024-02-23T17:40:31.353Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "c09aa6e2-bb11-474e-9e7f-5601b28e0e04",
+            "name": "Category",
+            "containerId": "",
+            "created": "2024-02-23T15:16:39.831Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "0ca46983-7719-42df-9080-073fef8f87d7",
+            "name": "Product",
+            "containerId": "",
+            "created": "2024-02-23T15:16:45.035Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "28a47447-3b6b-4c2e-93a6-be798ecd4b24",
+            "name": "User",
+            "containerId": "",
+            "created": "2024-02-23T16:45:01.551Z",
+            "sortNum": 30000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "40672f5d-c59f-4ade-9fed-4193f2fafac9",
+            "colId": "65bd9bdc-ff15-4c66-9ead-abfdee1adee7",
+            "containerId": "0ca46983-7719-42df-9080-073fef8f87d7",
+            "name": "SaveProduct",
+            "url": "/product/save",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-02-23T15:16:59.088Z",
+            "modified": "2024-02-23T15:18:50.577Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "af926e89-0212-4847-9982-4a2cedb4402e",
+            "colId": "65bd9bdc-ff15-4c66-9ead-abfdee1adee7",
+            "containerId": "c09aa6e2-bb11-474e-9e7f-5601b28e0e04",
+            "name": "SaveCategory",
+            "url": "/category/save",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-02-23T16:14:11.967Z",
+            "modified": "2024-02-23T16:28:28.720Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "name",
+                        "value": "Videojuegos"
+                    },
+                    {
+                        "name": "description",
+                        "value": "Area para los amantes de los videojuegos"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "185b9f07-2bd5-4b81-ac7a-597d848637d7",
+            "colId": "65bd9bdc-ff15-4c66-9ead-abfdee1adee7",
+            "containerId": "c09aa6e2-bb11-474e-9e7f-5601b28e0e04",
+            "name": "getCategories",
+            "url": "/category/get",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-02-23T16:21:57.126Z",
+            "modified": "2024-02-23T16:22:30.827Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "3c4d1853-2db0-4a0c-9dd2-102ad08d5bc5",
+            "colId": "65bd9bdc-ff15-4c66-9ead-abfdee1adee7",
+            "containerId": "c09aa6e2-bb11-474e-9e7f-5601b28e0e04",
+            "name": "ModifyCategory",
+            "url": "/category/update/65cec7ec6fae1c771c84de73",
+            "method": "PUT",
+            "sortNum": 50000,
+            "created": "2024-02-23T16:24:13.122Z",
+            "modified": "2024-02-23T16:25:25.375Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "name",
+                        "value": "Jugos y Bebidas"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "13f5a640-7a84-4361-a7b7-89c6b1467ebf",
+            "colId": "65bd9bdc-ff15-4c66-9ead-abfdee1adee7",
+            "containerId": "c09aa6e2-bb11-474e-9e7f-5601b28e0e04",
+            "name": "DeleteCategory",
+            "url": "/category/delete/65d8c7ac10712738cfdbb004",
+            "method": "DELETE",
+            "sortNum": 60000,
+            "created": "2024-02-23T16:26:48.041Z",
+            "modified": "2024-02-23T16:28:43.288Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c469a010-f263-41a4-bded-6860e9b8cd5d",
+            "colId": "65bd9bdc-ff15-4c66-9ead-abfdee1adee7",
+            "containerId": "0ca46983-7719-42df-9080-073fef8f87d7",
+            "name": "getProducts",
+            "url": "/product/get",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2024-02-23T16:29:45.560Z",
+            "modified": "2024-02-23T16:29:52.794Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "27c04566-1322-4337-8d80-c66168069cad",
+            "colId": "65bd9bdc-ff15-4c66-9ead-abfdee1adee7",
+            "containerId": "0ca46983-7719-42df-9080-073fef8f87d7",
+            "name": "getProduct",
+            "url": "/product/getProduct/65cec9db6fae1c771c84de80",
+            "method": "GET",
+            "sortNum": 90000,
+            "created": "2024-02-23T16:32:32.408Z",
+            "modified": "2024-02-23T16:33:42.161Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "0c433519-3261-444c-8deb-34f25e29ba45",
+            "colId": "65bd9bdc-ff15-4c66-9ead-abfdee1adee7",
+            "containerId": "0ca46983-7719-42df-9080-073fef8f87d7",
+            "name": "getProductsOut",
+            "url": "/product/getProductOut",
+            "method": "GET",
+            "sortNum": 100000,
+            "created": "2024-02-23T16:35:00.532Z",
+            "modified": "2024-02-23T16:35:15.307Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "83648ccc-f86f-4a36-8122-c84ca40d86c5",
+            "colId": "65bd9bdc-ff15-4c66-9ead-abfdee1adee7",
+            "containerId": "0ca46983-7719-42df-9080-073fef8f87d7",
+            "name": "SearchProducts",
+            "url": "/product/searchProduct",
+            "method": "POST",
+            "sortNum": 110000,
+            "created": "2024-02-23T16:36:47.722Z",
+            "modified": "2024-02-23T16:37:34.703Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "name",
+                        "value": "Balon Voleyball Molten"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "5b2fb88d-9cd9-4c27-a639-1e87d3886eda",
+            "colId": "65bd9bdc-ff15-4c66-9ead-abfdee1adee7",
+            "containerId": "0ca46983-7719-42df-9080-073fef8f87d7",
+            "name": "UpdateProduct",
+            "url": "/product/update/",
+            "method": "PUT",
+            "sortNum": 120000,
+            "created": "2024-02-23T16:38:49.388Z",
+            "modified": "2024-02-23T16:40:20.609Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "86609366-02e0-4800-a8d5-cde74dd28590",
+            "colId": "65bd9bdc-ff15-4c66-9ead-abfdee1adee7",
+            "containerId": "0ca46983-7719-42df-9080-073fef8f87d7",
+            "name": "DeleteProduct",
+            "url": "/product/delete/",
+            "method": "DELETE",
+            "sortNum": 130000,
+            "created": "2024-02-23T16:40:38.279Z",
+            "modified": "2024-02-23T16:41:03.645Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        }
+    ],
+    "settings": {
+        "options": {
+            "baseUrl": "localhost:2657"
+        }
+    }
+}
