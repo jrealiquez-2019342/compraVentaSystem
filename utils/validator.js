@@ -34,6 +34,14 @@ export const checkUpdate = (data, userId)=>{
             data.role == '' //si deja el rol vacio.
         )return false;
         return true;
+    }else{
+        if(
+            //admin
+            Object.entries(data).length === 0 ||
+            data.password || //si cambia la password devuelve false
+            data.password == '' //si envia la password vacia
+        )return false;
+        return true;
     }
 }
 
