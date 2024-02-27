@@ -37,7 +37,15 @@ const userSchema = Schema({
         uppercase: true,
         enum:['ADMIN', 'CLIENT'],
         required: [true, 'Role is required.']
+    },
+    status:{
+        type: Boolean,
+        default: true,
+        required: [true, 'User status is required.']
     }
+},
+{
+    versionKey: false
 });
 
 //exportar el modelo.
