@@ -7,7 +7,7 @@ export const test = (req, res) => {
     res.send({ message: `Product test is running...` });
 }
 
-//CREATE
+//funcion para guardar un producto
 export const save = async (req, res) => {
     try {
         let data = req.body;
@@ -21,7 +21,7 @@ export const save = async (req, res) => {
     }
 }
 
-//READ
+//funcion para obtener todos los productos
 export const get = async (req, res) => {
     try {
         let products = await Product.find().populate('category', ['name']);
@@ -32,6 +32,7 @@ export const get = async (req, res) => {
     }
 }
 
+//funcion para obtener un producto segun el id
 export const getProduct = async (req, res) => {
     try {
         let { id } = req.params;
@@ -44,6 +45,8 @@ export const getProduct = async (req, res) => {
     }
 }
 
+
+//funcion para obtener un producto segun el nombre
 export const searchProduct = async (req, res) => {
     try {
         let { name } = req.body;
@@ -56,6 +59,7 @@ export const searchProduct = async (req, res) => {
     }
 }
 
+//funcion para llamar a los productos agotados (stock -> 0)
 export const productOut = async (req, res) => {
     try {
         let product = await Product.find({ stock: 0 }).populate('category');
@@ -66,7 +70,7 @@ export const productOut = async (req, res) => {
     }
 }
 
-//UPDATE
+//funcion para modificar un producto
 export const update = async (req, res) => {
     try {
         let data = req.body;
@@ -85,7 +89,7 @@ export const update = async (req, res) => {
     }
 }
 
-//DELETE
+//funcion para eliminar productos
 export const deleteP = async (req, res) => {
     try {
         let { id } = req.params;
