@@ -5,15 +5,13 @@ import { checkPassword, encrypt } from '../../utils/validator.js';
 import { generateJwt } from './../../utils/jwt.js';
 import { checkUpdate } from '../../utils/validator.js';
 
-/*=========================== */
-//  AUN NO ESTA TERMINADO
-/*=========================== */
-
+//funcion para realizar test
 export const test = (req, res) => {
     console.log('user test is running...');
     return res.send({ message: `User test is running...` })
 }
 
+//funcion para registrar administradores
 export const register = async (req, res) => {
     try {
         let data = req.body;
@@ -43,6 +41,7 @@ export const register = async (req, res) => {
     }
 }
 
+//funcion para registrar clientes
 export const registerClient = async (req, res) => {
     try {
         let data = req.body;
@@ -71,6 +70,7 @@ export const registerClient = async (req, res) => {
     }
 }
 
+//funcion para logearse con usuario o correo (clientes y administradores)
 export const login = async (req, res) => {
     try {
         let { username, password } = req.body;
@@ -99,7 +99,7 @@ export const login = async (req, res) => {
     }
 }
 
-
+//funcion para modificar el usuario
 export const update = async (req, res) => {
     try {
 
@@ -143,7 +143,7 @@ export const update = async (req, res) => {
 
 
 /* ADMIN AL ARRANCAR EL PROYECTO */
-
+//funcion para crear un administrador por defecto.
 export const createAdmin = async () => {
     try {
         let user = await User.findOne({ username: 'jnoj' });
@@ -160,7 +160,7 @@ export const createAdmin = async () => {
             });
             admin.password = await encrypt(admin.password);
             await admin.save();
-            return console.log({ message: `Registered successfully. \nCan be logged with username ${admin.username}` })
+            return console.log({ message: `Registered successfully. \nCan be logged with username ${admin.username} and pass 12345` })
         }
         console.log({ message: `Can be logged with username ${user.username}` });
 
