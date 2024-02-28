@@ -144,7 +144,7 @@ export const update = async (req, res) => {
 
 /* ADMIN AL ARRANCAR EL PROYECTO */
 
-export const createTeacher = async () => {
+export const createAdmin = async () => {
     try {
         let user = await User.findOne({ username: 'jnoj' });
         if (!user) {
