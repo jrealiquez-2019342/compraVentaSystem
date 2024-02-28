@@ -21,6 +21,17 @@ export const save = async (req, res) => {
     }
 }
 
+//funcion para obtener los productos mas vendidos
+export const mostSelled = async(req, res)=>{
+    try {
+        let products = await Product.find().sort({sold: -1});//descendente -1 | ascendente 1
+        return res.send({products});
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({message:`Error showing products most selled.`})
+    }
+}
+
 //funcion para obtener todos los productos
 export const get = async (req, res) => {
     try {
