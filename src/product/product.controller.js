@@ -1,6 +1,7 @@
 'use strict'
 
 import Product from './product.model.js';
+import Category from './../category/category.model.js';
 
 export const test = (req, res) => {
     console.log('product test is running...');
@@ -35,7 +36,7 @@ export const mostSelled = async(req, res)=>{
 //funcion para obtener todos los productos
 export const get = async (req, res) => {
     try {
-        let products = await Product.find().populate('category', ['name']);
+        let products = await Product.find().populate('category', 'name');
         return res.send({ products });
     } catch (err) {
         console.error(err);
@@ -67,6 +68,30 @@ export const searchProduct = async (req, res) => {
     } catch (err) {
         console.error(err);
         return res.status(500).send({ message: `Error getting product.` })
+    }
+}
+
+//funcion para obtener productos segun la categoria
+export const getProductCategory = async(req, res)=>{
+    try {
+        //obtenemos el id de la categoria
+        let {id} = req.params;
+
+        //validamos que exista la categoria
+        let categoryFind = await Category.findOne({_id: id});
+        if(!categoryFind) return res.status(404).send({message:`Category not found`});
+
+        //buscamos los productos segun la categoria
+
+        let productsFind = await Product.find({category: categoryFind._id}).populate({
+            path: 'category',
+            select: '-_id name'
+        });
+        
+        return res.send({productsFind});
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({message:`Error getting products by category | getProductCategory.`});
     }
 }
 
