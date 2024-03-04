@@ -1,27 +1,36 @@
-import {Schema, model} from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 const billSchema = Schema({
-    user:{
+    user: {
         type: Schema.Types.ObjectId,
-        ref:'User',
+        ref: 'User',
         required: [true, 'User Id is required.']
     },
-    cart:{
+    cart: {
         type: Schema.Types.ObjectId,
-        ref:'Cart',
+        ref: 'Cart',
         required: [true, 'Cart Id is required']
     },
-    pay:{
+    price: {
+        type: Number,
+        min: [0, 'Price cannot be negative.'],
+        required: [true, 'Price / subtotal is required.']
+    }, total: {
+        type: Number,
+        min: [0, 'Price cannot be negative.'],
+        required: [true, 'Total is required.']
+    },
+    pay: {
         type: String,
-        enum:['Cash', 'Credit Card', 'Debit Card'],
+        enum: ['Cash', 'Credit Card', 'Debit Card'],
         default: 'Cash'
     },
-    createdAt:{
+    createdAt: {
         type: Date,
         default: Date.now
     },
-    updatedAt:{
-        type:Date,
+    updatedAt: {
+        type: Date,
         default: Date.now
     }
 });

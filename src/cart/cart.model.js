@@ -35,3 +35,5 @@ const cartSchema = Schema({
         default: Date.now
     }
 });
+
+export default model('Cart', cartSchema);
