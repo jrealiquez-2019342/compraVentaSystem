@@ -76,6 +76,9 @@ export const login = async (req, res) => {
         let user = await User.findOne({ $or: [{ username }, { email: username }] });
         if (!user) return res.status(404).send({ message: `Invalid credentials.` })
 
+        //validamos que el usuario este activo
+        if (user.status == false) return res.status(403).send({ message: `You don't have access | Please contact technical support.` });
+
         if (await checkPassword(password, user.password)) {
             let loggedUser = {
                 uid: user._id,
@@ -173,19 +176,19 @@ export const deleteU = async (req, res) => {
     try {
 
         //obtenemos los datos del usuario logeado
-        let user, { _id, role, username } = req.user;
-        
-        //validar si el body tiene datos (eliminar a alguien mas)
-        let data, {password} = req.body;
+        let { _id, role, username, password } = req.user;
 
-        if (Object.entries(data) !== 0) {
+        //validar si el body tiene datos (eliminar a alguien mas)
+        let data = req.body;
+
+        if (data && Object.entries(data).length !== 0) {
             //eliminar a otro usuario
             switch (role) {
                 case 'ADMIN':
                     //pedir contraseña de la cuenta para confirmar eliminacion
-                    if (!password) return res.staus(400).send({ message: `Confirmation password required.` });
+                    if (!data.password) return res.staus(400).send({ message: `Confirmation password required.` });
                     //validamos que las contrasenias coincidan.
-                    if (await checkPassword(password, user.password)) {
+                    if (await checkPassword(data.password, password)) {
                         //buscamos al usuario a modificar
                         let updated = await User.findOneAndUpdate(
                             { _id: data.user },//buscamos
@@ -194,13 +197,12 @@ export const deleteU = async (req, res) => {
 
                         //si el usuario no fue encontrado
                         if (!updated) return res.status(400).send({ message: `User not found and not deleted.` });
-                    } else {
-                        return res.status(400).send({ message: `Incorrect password` });
+                        //actualizado con exito
+                        return res.send({ message: `@${updated.username} deleted successfully.` });
                     }
 
-                    //actualizado con exito
-                    return res.send({ message: `@${username} deleted successfully.` });
-                    break;
+                    return res.status(400).send({ message: `Incorrect password` });
+
                 default:
                     //si un cliente quiere eliminar a otro cliente
                     return res.status(403).send({ message: `You do not have the necessary permissions | deleteU` });
@@ -209,9 +211,9 @@ export const deleteU = async (req, res) => {
             //elimina su propio perfil
 
             //pedir contraseña de la cuenta para confirmar eliminacion
-            if (!password) return res.staus(400).send({ message: `Confirmation password required.` });
+            if (!data.password) return res.status(400).send({ message: `Confirmation password required.` });
             //validamos que las contrasenias coincidan.
-            if (await checkPassword(password, user.password)) {
+            if (await checkPassword(data.password, password)) {
                 //buscamos al usuario a modificar
                 let updated = await User.findOneAndUpdate(
                     { _id },//buscamos
@@ -220,15 +222,12 @@ export const deleteU = async (req, res) => {
 
                 //si el usuario no fue encontrado
                 if (!updated) return res.status(400).send({ message: `User not found and not deleted.` });
-            } else {
-                return res.status(400).send({ message: `Incorrect password` });
+
+                //actualizado con exito
+                return res.send({ message: `@${updated.username} deleted successfully.` });
             }
-
-            //actualizado con exito
-            return res.send({ message: `@${username} deleted successfully.` });
-
+            return res.status(400).send({ message: `Incorrect password` });
         }
-
     } catch (err) {
         console.error(err);
         return res.status(500).send({ message: `Error deleting account.` });

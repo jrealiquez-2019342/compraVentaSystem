@@ -28,6 +28,6 @@ api.post('/login', login);
 api.put('/update', [validateJwt], update);
 
 //eliminar usuario
-api.delete('/delete', [validateJwt], deleteU);
+api.put('/delete', [validateJwt], deleteU);
 
 export default api;
