@@ -182,16 +182,45 @@ export const deleteU = async (req, res) => {
         let data = req.body;
 
         if (data && Object.entries(data).length !== 0) {
-            //eliminar a otro usuario
+            //pedir contraseña de la cuenta para confirmar eliminacion
+            if (!data.password) return res.staus(400).send({ message: `Confirmation password required.` });
             switch (role) {
                 case 'ADMIN':
-                    //pedir contraseña de la cuenta para confirmar eliminacion
-                    if (!data.password) return res.staus(400).send({ message: `Confirmation password required.` });
                     //validamos que las contrasenias coincidan.
                     if (await checkPassword(data.password, password)) {
-                        //buscamos al usuario a modificar
+                        let pivot;
+                        if (data.user) {
+                            //buscamos al usuario a modificar
+                            let updated = await User.findOneAndUpdate(
+                                { _id: data.user },//buscamos
+                                { $set: { status: false } }//actualizamos el valor
+                            );
+                            pivot = updated;
+                        } else {
+                            let updated = await User.findOneAndUpdate(
+                                { _id },//buscamos
+                                { $set: { status: false } }//actualizamos el valor
+                            );
+                            pivot = updated;
+                        }
+                        //si el usuario no fue encontrado
+                        if (!pivot) return res.status(400).send({ message: `User not found and not deleted. | Admin` });
+                        //actualizado con exito
+                        return res.send({ message: `@${pivot.username} deleted successfully.` });
+                    }
+
+                    return res.status(400).send({ message: `Incorrect password` });
+
+                default:
+                    console.log('entrando a default')
+                    //validamos si un cliente quiere eliminar a otro
+                    if (data.user) return res.status(403).send({ message: `You do not have the necessary permissions | deleteU` });
+
+                    //validamos contrasenia
+                    if (await checkPassword(data.password, password)) {
+
                         let updated = await User.findOneAndUpdate(
-                            { _id: data.user },//buscamos
+                            { _id },//buscamos
                             { $set: { status: false } }//actualizamos el valor
                         );
 
@@ -200,33 +229,10 @@ export const deleteU = async (req, res) => {
                         //actualizado con exito
                         return res.send({ message: `@${updated.username} deleted successfully.` });
                     }
-
                     return res.status(400).send({ message: `Incorrect password` });
-
-                default:
-                    //si un cliente quiere eliminar a otro cliente
-                    return res.status(403).send({ message: `You do not have the necessary permissions | deleteU` });
             }
         } else {
-            //elimina su propio perfil
-
-            //pedir contraseña de la cuenta para confirmar eliminacion
-            if (!data.password) return res.status(400).send({ message: `Confirmation password required.` });
-            //validamos que las contrasenias coincidan.
-            if (await checkPassword(data.password, password)) {
-                //buscamos al usuario a modificar
-                let updated = await User.findOneAndUpdate(
-                    { _id },//buscamos
-                    { $set: { status: false } }//actualizamos el valor
-                );
-
-                //si el usuario no fue encontrado
-                if (!updated) return res.status(400).send({ message: `User not found and not deleted.` });
-
-                //actualizado con exito
-                return res.send({ message: `@${updated.username} deleted successfully.` });
-            }
-            return res.status(400).send({ message: `Incorrect password` });
+            return res.status(400).send({ message: `Error: Data is empty` });
         }
     } catch (err) {
         console.error(err);
