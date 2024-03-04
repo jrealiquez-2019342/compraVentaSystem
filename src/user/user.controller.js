@@ -1,17 +1,16 @@
 'use strict'
 
 import User from './user.model.js';
-import { checkPassword, encrypt } from '../../utils/validator.js';
+import { checkPassword, encrypt, checkUpdate } from './../../utils/validator.js';
 import { generateJwt } from './../../utils/jwt.js';
-import { checkUpdate } from '../../utils/validator.js';
 
-//funcion para realizar test
+//Funcion para realizar test
 export const test = (req, res) => {
     console.log('user test is running...');
     return res.send({ message: `User test is running...` })
 }
 
-//funcion para registrar administradores
+//Funcion para registrar administradores
 export const register = async (req, res) => {
     try {
         let data = req.body;
@@ -27,7 +26,7 @@ export const register = async (req, res) => {
         data.password = await encrypt(data.password);
 
         //si el no ingreso role, le asignamos uno por defecto
-        if (!data.role) data.role = 'CLIENT';
+        if (!data.role) data.role = 'ADMIN';
 
         //creamos nuestro usuario
         let user = new User(data);
@@ -41,7 +40,7 @@ export const register = async (req, res) => {
     }
 }
 
-//funcion para registrar clientes
+//Funcion para registrar clientes
 export const registerClient = async (req, res) => {
     try {
         let data = req.body;
@@ -70,7 +69,7 @@ export const registerClient = async (req, res) => {
     }
 }
 
-//funcion para logearse con usuario o correo (clientes y administradores)
+//Funcion para logearse con usuario o correo (clientes y administradores)
 export const login = async (req, res) => {
     try {
         let { username, password } = req.body;
@@ -93,16 +92,17 @@ export const login = async (req, res) => {
                 token
             })
         }
+        //si no coincide la contrasenia
+        return res.status(400).send({ message: `Invalid credentials` });
     } catch (err) {
         console.error(err);
         return res.status(500).send({ message: `ERROR IN LOGIN` });
     }
 }
 
-//funcion para modificar el usuario
+//Funcion para modificar el usuario
 export const update = async (req, res) => {
     try {
-
         //extraer valores de req.user
         //let { role, uid } = jwt.verify(token, process.env.SECRET_KEY);
         let { role, uid } = req.user;
@@ -112,8 +112,31 @@ export const update = async (req, res) => {
 
         switch (role) {
             case 'ADMIN':
-                //validar si trae datos y si se pueden modificar.
-                if (!checkUpdate(data, false)) return res.status(400).send({ message: `Have submitted some data that cannot be updated or missing data` });
+                //verificamos si dentro del body deseamos modificar a un usuario en especifico
+                if (data.userId) {
+                    //validar que el id del usuario exista
+                    let userFind = await User.findOne({ _id: data.userId });
+                    if (!userFind) return res.status(404).send({ message: `User to modify not found.` });
+
+                    //Si es admin y no coincide el id con el registrado, no permitir modificar
+                    if (uid !== userFind._id && userFind.role == 'ADMIN') return res.status(403).send({ message: `You cannot edit another administrator` });
+
+                    //quedan dos opciones, si es su mismo id o es otro usuario con rol cliente
+                    switch (userFind.role) {
+                        case 'CLIENT':
+                            //validar si trae datos y si se pueden modificar.
+                            if (!checkUpdate(data, false, true)) return res.status(400).send({ message: `Have submitted some data that cannot be updated or missing data` });
+                            break;
+                        default:
+                            //validar si trae datos y si se pueden modificar.
+                            if (!checkUpdate(data, false, false)) return res.status(400).send({ message: `Have submitted some data that cannot be updated or missing data` });
+                            break;
+                    }
+                } else {
+                    //se va a modificar el mismo admin
+                    //validar si trae datos y si se pueden modificar.
+                    if (!checkUpdate(data, false)) return res.status(400).send({ message: `Have submitted some data that cannot be updated or missing data` });
+                }
                 break;
             case 'CLIENT':
                 //validar si trae datos y si se pueden modificar.
@@ -140,6 +163,77 @@ export const update = async (req, res) => {
     }
 }
 
+/*
+    FUNCION PARA ELIMINAR USUARIO
+    unicamente es un cambio de status
+    para evitar problemas con facturas
+*/
+
+export const deleteU = async (req, res) => {
+    try {
+
+        //obtenemos los datos del usuario logeado
+        let user, { _id, role, username } = req.user;
+        
+        //validar si el body tiene datos (eliminar a alguien mas)
+        let data, {password} = req.body;
+
+        if (Object.entries(data) !== 0) {
+            //eliminar a otro usuario
+            switch (role) {
+                case 'ADMIN':
+                    //pedir contraseña de la cuenta para confirmar eliminacion
+                    if (!password) return res.staus(400).send({ message: `Confirmation password required.` });
+                    //validamos que las contrasenias coincidan.
+                    if (await checkPassword(password, user.password)) {
+                        //buscamos al usuario a modificar
+                        let updated = await User.findOneAndUpdate(
+                            { _id: data.user },//buscamos
+                            { $set: { status: false } }//actualizamos el valor
+                        );
+
+                        //si el usuario no fue encontrado
+                        if (!updated) return res.status(400).send({ message: `User not found and not deleted.` });
+                    } else {
+                        return res.status(400).send({ message: `Incorrect password` });
+                    }
+
+                    //actualizado con exito
+                    return res.send({ message: `@${username} deleted successfully.` });
+                    break;
+                default:
+                    //si un cliente quiere eliminar a otro cliente
+                    return res.status(403).send({ message: `You do not have the necessary permissions | deleteU` });
+            }
+        } else {
+            //elimina su propio perfil
+
+            //pedir contraseña de la cuenta para confirmar eliminacion
+            if (!password) return res.staus(400).send({ message: `Confirmation password required.` });
+            //validamos que las contrasenias coincidan.
+            if (await checkPassword(password, user.password)) {
+                //buscamos al usuario a modificar
+                let updated = await User.findOneAndUpdate(
+                    { _id },//buscamos
+                    { $set: { status: false } }//actualizamos el valor
+                );
+
+                //si el usuario no fue encontrado
+                if (!updated) return res.status(400).send({ message: `User not found and not deleted.` });
+            } else {
+                return res.status(400).send({ message: `Incorrect password` });
+            }
+
+            //actualizado con exito
+            return res.send({ message: `@${username} deleted successfully.` });
+
+        }
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({ message: `Error deleting account.` });
+    }
+}
 
 
 /* ADMIN AL ARRANCAR EL PROYECTO */
