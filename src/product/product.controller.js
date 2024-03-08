@@ -62,7 +62,8 @@ export const getProduct = async (req, res) => {
 export const searchProduct = async (req, res) => {
     try {
         let { name } = req.body;
-        let product = await Product.findOne({ name }).populate('category');
+        //$options: i -> para que sea insensible a mayusculas i minusculas
+        let product = await Product.find({ "name": { $regex: name, $options: 'i' } }).populate('category');
         if (!product) return res.status(404).send({ message: `Product not found.` })
         return res.send({ product });
     } catch (err) {
@@ -128,6 +129,7 @@ export const update = async (req, res) => {
 //funcion para eliminar productos
 export const deleteP = async (req, res) => {
     try {
+        //no se puede eliminar un producto, se debe cambiar de estado.
         let { id } = req.params;
         let deleteProduct = await Product.deleteOne({ _id: id });
         if (deleteProduct.deletedCount === 0) return res.status(404).send({ message: `Product not found and not deleted.` });

@@ -1,10 +1,19 @@
 import { Schema, model } from 'mongoose';
 
 const billSchema = Schema({
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: [true, 'User Id is required.']
+    },
+    nit: {
+        type: String,
+        minLength: [2, 'Nit min length must be two characters. | CF'],
+        required: [true, 'NIT is required']
     },
     cart: {
         type: Schema.Types.ObjectId,
@@ -22,17 +31,18 @@ const billSchema = Schema({
     },
     pay: {
         type: String,
-        enum: ['Cash', 'Credit Card', 'Debit Card'],
-        default: 'Cash'
+        enum: ['CASH', 'CREDIT CARD', 'DEBIT CARD'],
+        default: 'CASH'
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    comment: {
+        type: String
     },
     updatedAt: {
         type: Date,
         default: Date.now
     }
+}, {
+    versionKey: false
 });
 
 export default model('Bill', billSchema);
